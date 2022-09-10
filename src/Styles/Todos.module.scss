@@ -1,0 +1,44 @@
+.container {
+  width: 100%;
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+
+  .block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+    width: 500px;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    border-radius: 8px;
+    h2{
+      color: #333;
+    }
+    .todos {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 60px;
+      border: 1px solid #555;
+      padding: 8px;
+      border-radius: 4px;
+      .btn_block {
+        display: flex;
+        gap: 4px;
+        button {
+          padding: 8px 16px;
+          border-radius: 4px;
+          cursor: pointer;
+          color: white;
+          border: 0;
+        }
+      }
+
+      p {
+        font-size: 16px;
+      }
+    }
+  }
+}
