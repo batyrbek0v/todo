@@ -1,0 +1,41 @@
+.container{
+  width: 100%;
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .icon{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 300px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    padding: 2rem;
+    border-radius: 12px;
+    .title{
+      display: flex;
+      align-items: center;
+      color: #222;
+      gap: 12px;
+      .downIcon{
+        animation: MoveUpDown 2s linear infinite;
+      }
+    }
+    .googleIcon{
+      font-size: 4rem;
+      cursor: pointer;
+      filter: drop-shadow(4px 0px 1px #ccc);
+    }
+  }
+}
+
+@keyframes MoveUpDown {
+  0%, 100% {
+    transform: translateY(-10px);
+  }
+  50% {
+    transform: translateY(10px);
+
+  }
+}
