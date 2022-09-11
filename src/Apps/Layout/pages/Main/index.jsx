@@ -1,6 +1,6 @@
 import React from 'react'
 import Todo from '../../../../components/FormInput/Form'
-import { createTodo } from '../../../../configs'
+import { createTodo, deleteTodo } from '../../../../configs'
 import { API } from '../../../../configs/Api'
 import UseLogin from '../../../Auth/pages/Login/hooks/UseLogin'
 import { useCards } from '../Hooks/useCards'
@@ -8,12 +8,14 @@ import Loader from "../../../../components/Loader/Loader"
 import Form from '../../../../components/FormInput/Form'
 import Todos from '../../../../components/Todos/Todos'
 import cls from "../../../../Styles/Todos.module.scss"
+import { useState } from 'react'
+import { useParams } from 'react-router-dom'
 
 const Main = () => {
 
   const { users } = UseLogin()
 
-  const { actions, isLoading, allTodos } = useCards()
+  const { actions, isLoading, todos } = useCards()
 
   const [todo, setTodo] = React.useState('')
 
@@ -29,7 +31,9 @@ const Main = () => {
     setTodo('')
   }
 
-  if (!allTodos) return <Loader />
+
+
+  if (!todos) return <Loader />
 
   return (
     <div style={{ "textAlign": "center", "marginTop": "50px" }}>
@@ -38,10 +42,10 @@ const Main = () => {
         setTodo={setTodo}
         onSubmit={handleSubmit}
         isLoading={isLoading}
-        todos={allTodos}
+        todos={todos}
       />
       {
-        allTodos.length === 0 && (
+        todos.length === 0 && (
           <h1>Нет Задач!</h1>
         )
       }
@@ -49,14 +53,14 @@ const Main = () => {
         <div className={cls.block}>
           <h2>All Todos</h2>
           {
-            allTodos.map(({ id, todo, completed }) => (
+            todos.map(({ id, todo, completed }) => (
               <Todos
                 key={id}
                 id={id}
                 todo={todo}
                 comleted={completed}
               />
-            ))
+            )).reverse()
           }
         </div>
       </div>
