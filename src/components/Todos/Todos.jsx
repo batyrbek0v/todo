@@ -2,68 +2,53 @@ import React from 'react'
 import cls from "../../Styles/Todos.module.scss"
 import { RiDeleteBin5Fill } from "react-icons/ri"
 import { MdModeEditOutline } from "react-icons/md"
-import { BsCheckLg } from "react-icons/bs"
-import { useCards } from '../../Apps/Layout/pages/Hooks/useCards'
-import UseLogin from '../../Apps/Auth/pages/Login/hooks/UseLogin'
-import { deleteTodo, getTodos, removeTodo } from '../../configs'
+import { ImCheckboxUnchecked, ImCheckboxChecked } from 'react-icons/im'
+import Skeletons from '../Loader/Skeletons'
 
-const Todos = ({ id, todo, comleted }) => {
+const Todos = ({ id, todo, completed, onComplete, onEdit, onDelete, isLoading }) => {
 
-
-  const [base, setBase] = React.useState(null)
-  const { users } = UseLogin()
-
-  React.useEffect(() => {
-    getDeleteBase()
-  }, [])
-
-  const getDeleteBase = () => {
-    getTodos(users?.id)
-      .then(res => {
-        if (res?.data) {
-          const baseWithId = Object.entries(res?.data).map(([id, item]) => {
-            return {
-              id,
-              ...item
-            }
-          })
-          setBase(baseWithId)
-        }
-      })
-  }
-  const todoDelete = (id) => {
-    removeTodo(users?.id, id).then((r) => r && getDeleteBase())
-  }
-
-
+  if (isLoading) return <Skeletons />
 
   return (
     <React.Fragment>
       <div className={cls.todos}>
-        <p>{todo}</p>
+        <p className={completed && cls.complete}>{todo}</p>
         <div className={cls.btn_block}>
           <button
-            onClick={e => {
-              e.preventDefault()
-              todoDelete(id)
-            }}
-            // style={{ "backgroundColor": "#F31322" }}
-          >
-            <RiDeleteBin5Fill />
+            disabled={isLoading}
+            onClick={() => onDelete(id)}>
+            <RiDeleteBin5Fill
+            />
           </button>
           <button
-            // style={{ "backgroundColor": "#5132D9" }}
+            disabled={isLoading}
+            onClick={() => onEdit(id, todo)}
           >
             <MdModeEditOutline />
           </button>
-          <button
-            // style={{ "backgroundColor": "#17BC58" }}
-          >
-            <BsCheckLg />
-          </button>
+          {
+            completed && (
+              <button
+                disabled={isLoading}
+                onClick={() => onComplete(id, completed)}
+              >
+                <ImCheckboxChecked />
+              </button>
+            )
+          }
+          {
+            !completed && (
+              <button
+                disabled={isLoading}
+                onClick={() => onComplete(id, completed)}
+              >
+                <ImCheckboxUnchecked />
+              </button>
+            )
+          }
         </div>
       </div>
-    </React.Fragment>
+    </React.Fragment >
   )
 }
 

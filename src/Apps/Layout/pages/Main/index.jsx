@@ -1,15 +1,13 @@
 import React from 'react'
 import Todo from '../../../../components/FormInput/Form'
-import { createTodo, deleteTodo } from '../../../../configs'
-import { API } from '../../../../configs/Api'
 import UseLogin from '../../../Auth/pages/Login/hooks/UseLogin'
 import { useCards } from '../Hooks/useCards'
-import Loader from "../../../../components/Loader/Loader"
 import Form from '../../../../components/FormInput/Form'
 import Todos from '../../../../components/Todos/Todos'
 import cls from "../../../../Styles/Todos.module.scss"
-import { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { ImSpinner11 } from 'react-icons/im'
+import { RiDeleteBin3Fill } from 'react-icons/ri'
+import Skeletons from '../../../../components/Loader/Skeletons'
 
 const Main = () => {
 
@@ -19,21 +17,41 @@ const Main = () => {
 
   const [todo, setTodo] = React.useState('')
 
-
+  // =======================================================
   const handleSubmit = e => {
     e.preventDefault()
 
     actions.post({
       todo: todo,
-      comleted: false,
+      completed: false,
     })
 
     setTodo('')
   }
+  // =======================================================
 
+  const handleDelete = id => actions.deleteTodo(id)
 
+  // =======================================================
 
-  if (!todos) return <Loader />
+  const handleEdit = (id, todo) => {
+
+    const newTodo = prompt('New Task', todo)
+
+    actions.editTodoshka({ todo: newTodo }, id)
+
+  }
+
+  // =======================================================
+  const handleComplete = (id, completed) => actions.complete({ completed: !completed }, id)
+
+  // =======================================================
+
+  const updateTodos = () => actions.get(users?.id)
+
+  // =======================================================
+
+  const removeTodos = () => actions.deleteAllTodos(users?.id)
 
   return (
     <div style={{ "textAlign": "center", "marginTop": "50px" }}>
@@ -44,21 +62,35 @@ const Main = () => {
         isLoading={isLoading}
         todos={todos}
       />
-      {
-        todos.length === 0 && (
-          <h1>Нет Задач!</h1>
-        )
-      }
+
       <div className={cls.container}>
         <div className={cls.block}>
           <h2>All Todos</h2>
+          <div className={cls.updateTodos}>
+            <button
+              disabled={isLoading}
+              onClick={updateTodos}
+              className={cls.update}
+            >
+              <ImSpinner11 color='white' size="18px" />
+            </button>
+            <button onClick={removeTodos}>
+              <RiDeleteBin3Fill color='white' size="18px" />
+            </button>
+          </div>
+          {!todos && <h1 className={cls.error}>No tasks !</h1>}
+          
           {
-            todos.map(({ id, todo, completed }) => (
+            todos?.map(({ id, todo, completed }) => (
               <Todos
                 key={id}
                 id={id}
                 todo={todo}
-                comleted={completed}
+                completed={completed}
+                onComplete={handleComplete}
+                isLoading={isLoading}
+                onDelete={handleDelete}
+                onEdit={handleEdit}
               />
             )).reverse()
           }
